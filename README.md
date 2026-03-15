@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kids Prints
+
+AI-powered handwriting worksheet generator for children ages 3–9. Generate printable practice sheets tailored to your child's age, skill level, and interests — then refine them with natural-language AI editing.
+
+Built with Next.js 16, React 19, Tailwind CSS, and Google Gemini 2.5 Flash.
+
+## Features
+
+- **Age-appropriate content** — Follows the Handwriting Without Tears (HWT) methodology with Dolch sight words, CVC words, and developmentally sequenced letter order
+- **Four worksheet types** — Letters, numbers, words, and sentences with traced examples and blank practice rows
+- **Themed worksheets** — Add a fun theme like "dinosaurs" or "space" to personalize word and sentence content
+- **Print-ready layout** — 8.5" × 11" pages with ruled lines (top line, dashed midline, baseline) sized per age group
+- **Parent & teacher guide** — Optional companion page with developmental context, coaching tips, common mistakes, and encouragement prompts
+- **AI chat editing** — Modify a generated worksheet in plain language ("make the letters bigger", "switch to lowercase") with full undo support
+- **Shareable links** — Worksheet configs are encoded in the URL so you can share a worksheet with anyone via link
+- **Offline fallback** — Works without an API key using built-in mock data with real educational content
+- **Save & recall** — Recently generated worksheets are saved to localStorage for quick access
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+```bash
+git clone https://github.com/cdemeke/kids-worksheet.git
+cd kids-worksheet
+npm install
+```
+
+### Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+GEMINI_API_KEY=your_google_gemini_api_key
+```
+
+Get a Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey).
+
+> **Note:** The app works without an API key — it falls back to curated mock data with real HWT letter sequences, Dolch sight words, and age-appropriate sentences.
+
+### Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Configure** — Enter your child's name, select their age range, pick a worksheet type, and optionally add a theme
+2. **Generate** — Click "Generate Worksheet" to create a print-ready practice sheet
+3. **Edit** — Open the "Edit with AI" chat panel to refine the worksheet with natural language
+4. **Print** — Hit "Print" or use your browser's Print → Save as PDF to export
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── generate-worksheet/route.ts   # Worksheet generation endpoint
+│   │   └── edit-worksheet/route.ts       # AI chat editing endpoint
+│   ├── globals.css                       # Global styles and print layout
+│   ├── layout.tsx                        # Root layout with metadata
+│   └── page.tsx                          # Main app (config form ↔ preview)
+├── components/
+│   ├── ChatPanel.tsx                     # AI editing chat sidebar
+│   ├── TracingText.tsx                   # Tracing text, ruled lines, and row components
+│   ├── WorksheetConfigForm.tsx           # Configuration form
+│   └── WorksheetPreview.tsx              # Print-ready worksheet renderer
+└── lib/
+    ├── gemini.ts                         # Google Gemini API integration
+    ├── mock-data.ts                      # Fallback content (HWT, Dolch, CVC)
+    └── types.ts                          # TypeScript interfaces
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Tailwind CSS 4 |
+| AI | Google Gemini 2.5 Flash |
+| Printing | react-to-print |
+| Language | TypeScript 5 |
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
