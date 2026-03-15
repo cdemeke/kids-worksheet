@@ -53,10 +53,15 @@ export async function POST(request: NextRequest) {
     const updatedConfig = editResult?.config ?? applyMockEdit(currentConfig, userMessage).config;
     const response = editResult?.response ?? applyMockEdit(currentConfig, userMessage).response;
 
-    // Regenerate content with updated config
-    const content = await generateWorksheetContent(updatedConfig) ?? generateMockContent(updatedConfig);
+    // Regenerate content — skip AI for simple types (letters, numbers, custom)
+    const useAI = updatedConfig.contentMode !== 'custom'
+      && updatedConfig.worksheetType !== 'letters'
+      && updatedConfig.worksheetType !== 'numbers';
+    const content = useAI
+      ? (await generateWorksheetContent(updatedConfig) ?? generateMockContent(updatedConfig))
+      : generateMockContent(updatedConfig);
     const guideSheet = updatedConfig.includeGuideSheet
-      ? (await generateGuideContent(updatedConfig) ?? generateMockGuide(updatedConfig))
+      ? (useAI ? (await generateGuideContent(updatedConfig) ?? generateMockGuide(updatedConfig)) : generateMockGuide(updatedConfig))
       : undefined;
 
     const worksheet: GeneratedWorksheet = {
